@@ -21,6 +21,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=2.4.6",
+    "paragraphs>=1.0.1",
     "pillow>=12.3.0",
     "scipy>=1.17.1",
     "svg-ultralight>=0.115.1",
