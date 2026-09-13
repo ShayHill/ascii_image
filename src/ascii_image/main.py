@@ -27,6 +27,8 @@ def _unblacken_color(
     stood far back enough it would, but the best look subjectively is to dampen the
     "unblackening" by 50%.
     """
+    if max(rgb) == 0:
+        return (0, 0, 0)
     scale = dampen + (1 - dampen) * 255 / max(rgb)
     r, g, b = (x * scale for x in rgb)
     return float_tuple_to_8bit_int_tuple((r, g, b))
