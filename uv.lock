@@ -20,6 +20,7 @@ name = "ascii-image"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "basic-colormath" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "paragraphs" },
@@ -38,6 +39,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "basic-colormath", specifier = ">=1.1.3" },
     { name = "numpy", specifier = ">=2.4.6" },
     { name = "paragraphs", specifier = ">=1.0.1" },
     { name = "pillow", specifier = ">=12.3.0" },
@@ -50,6 +52,15 @@ dev = [
     { name = "commitizen", specifier = ">=4.18.0" },
     { name = "pre-commit", specifier = ">=4.6.2" },
     { name = "pytest", specifier = ">=9.1.1" },
+]
+
+[[package]]
+name = "basic-colormath"
+version = "1.1.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/37/1979fbf6339939249165b93971feaf5373b4c4cf2bc1d4a8b5b0414a1301/basic_colormath-1.1.3.tar.gz", hash = "sha256:bab62cb35b33186bae22870de3e5cac962fa6cde6c5885f358945ee6ec5b37e2", size = 16022, upload-time = "2026-08-29T19:49:04.886Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a0/6d/427ab04bd5222f025d9aa7b4013026a1be3461965295aa7095e701195621/basic_colormath-1.1.3-py3-none-any.whl", hash = "sha256:beb2f05c50f65749d1591bd4b1463933387c2f3583c9494cdd0baee69aa74abe", size = 20344, upload-time = "2026-08-29T19:49:03.91Z" },
 ]
 
 [[package]]

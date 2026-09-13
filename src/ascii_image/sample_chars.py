@@ -79,9 +79,10 @@ def get_font_vectors(font: Path) -> CharVectors:
     :param font: Path to the font file.
     :return: a (95, 8) array of character vectors stretched to [0, 255]
     """
-    cache = (_temp_dir / font.stem).with_suffix(".png")
+    cache = (_temp_dir / f"{font.stem}_{CHAR_W}_{CHAR_H}").with_suffix(".png")
     if not cache.exists():
         _rasterize_printable_ascii(cache, font)
+    _rasterize_printable_ascii(cache, font)
     alphas = np.array(Image.open(cache))[:, :, 3]
     char_vecs = pixels_to_char_vectors(alphas)
     return _normalize_char_vectors(char_vecs)

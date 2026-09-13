@@ -8,8 +8,10 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image
+from numpy import typing as npt
+from typing import Annotated
 
-from ascii_image.reshape import CharVectors, pixels_to_char_vectors
+from ascii_image.reshape import CharVectors, pixels_to_char_vectors, CHAR_W, CHAR_H
 
 
 def _infer_width_height(
@@ -26,24 +28,24 @@ def _infer_width_height(
         width_in_chars = round(height_in_chars * aspect_ratio)
     if height_in_chars is None:
         height_in_chars = round(width_in_chars / aspect_ratio)
-
     return width_in_chars, height_in_chars
 
 
 def get_pixel_vectors(
     path: Path, width: int | None, height: int | None = None
-) -> CharVectors:
+) -> tuple[CharVectors, Annotated[npt.NDArray[np.uint8], (-1, -1, 3)]]:
     """Sample an image at 8 pixels per character.
 
     :param path: path to the image file
     :param width: width of the image in characters
     :param height: height of the image in characters
-    :return: a (n, 8) array of character-location vectors
+    :return: array of superpixel vectors, (h, w, 3) array of colors
     """
     img = Image.open(path)
     width, height = _infer_width_height(img.size, width, height)
-    img = img.resize((width * 2, height * 4))
-    alphas = np.max(np.array(img)[:,:,:3], axis=2)
-    return pixels_to_char_vectors(alphas)
-
-
+    for_alphas = img.resize(
+        (width * CHAR_W, height * CHAR_H), resample=Image.Resampling.BILINEAR
+    )
+    alphas = np.max(np.array(for_alphas)[:, :, :3], axis=2)
+    for_colors = img.resize((width, height), resample=Image.Resampling.BILINEAR)
+    return pixels_to_char_vectors(alphas), np.array(for_colors)[:, :, :3]

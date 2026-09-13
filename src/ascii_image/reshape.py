@@ -12,7 +12,8 @@ from paragraphs import par
 
 CharVectors = Annotated[npt.NDArray[np.floating], (-1, 8)]
 
-CHAR_W, CHAR_H = 2, 4
+CHAR_W = 2
+CHAR_H = CHAR_W * 2
 
 
 def pixels_to_char_vectors(

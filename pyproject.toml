@@ -20,6 +20,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
+    "basic-colormath>=1.1.3",
     "numpy>=2.4.6",
     "paragraphs>=1.0.1",
     "pillow>=12.3.0",

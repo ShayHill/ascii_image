@@ -10,5 +10,4 @@ Create an ascii-art approximation of an image.
 - resize the input image such that each 2x4 region is now one pixel (thus one color)
 - color the output ascii image using those colors
 
-- output to svg
 - output to terminal
