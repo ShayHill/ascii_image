@@ -4,6 +4,7 @@
 :created: 2026-09-12
 """
 
+import itertools as it
 from pathlib import Path
 from typing import Annotated
 
@@ -11,6 +12,7 @@ import numpy as np
 from basic_colormath import float_tuple_to_8bit_int_tuple
 from numpy import typing as npt
 
+from ascii_image.format_colored_text import format_html, format_term
 from ascii_image.nearest_neighbor import find_nn_char_pnt
 from ascii_image.sample_chars import get_font_vectors
 from ascii_image.sample_image import get_pixel_vectors
@@ -34,45 +36,56 @@ def _unblacken_color(
     return float_tuple_to_8bit_int_tuple((r, g, b))
 
 
-def colored_char(char: str, rgb: tuple[int, int, int]) -> str:
-    """Return a colored character using ANSI escape codes.
-
-    :param char: character to color
-    :param rgb: RGB color tuple
-    :return: colored character as a string
-    """
-    r, g, b = rgb
-    return f"\033[38;2;{r};{g};{b}m{char}\033[0m"
-
-
-def new_ascii_image(
+def build_ascii_image(
     font_path: Path,
     image_path: Path,
     width: int | None = None,
     height: int | None = None,
-) -> list[str]:
+) -> tuple[list[tuple[int, int, int]], list[str], tuple[int, int]]:
     """Create an ascii-image given a source image and font path.
 
     :param font_path: path to the font file
     :param image_path: path to the source image
     :param width: width of the ascii-image in characters
     :param height: height of the ascii-image in characters
-    :return: ascii-image as a string
+    :return: list of RGB colors, list of characters,
+        and the shape of the image (height, width).
     """
     char_vectors = get_font_vectors(font_path)
     image_vectors, image_colors = get_pixel_vectors(image_path, width, height)
     char_pts = [find_nn_char_pnt(vec, char_vectors) for vec in image_vectors]
-    chars = [chr(x) for x in char_pts]
-    flat_colors = [_unblacken_color(x) for x in image_colors.reshape((-1, 3))]
+    return (
+        [_unblacken_color(x) for x in image_colors.reshape((-1, 3))],
+        [chr(x) for x in char_pts],
+        image_colors.shape[:2],
+    )
 
-    result: list[str] = []
-    for _ in range(image_colors.shape[0]):
-        chrs = chars[: image_colors.shape[1]]
-        cols = flat_colors[: image_colors.shape[1]]
-        result.append(
-            "".join(colored_char(c, col) for c, col in zip(chrs, cols, strict=True))
-        )
-        chars = chars[image_colors.shape[1] :]
-        flat_colors = flat_colors[image_colors.shape[1] :]
-    return result
 
+def format_ascii_image_for_term(
+    colors: list[tuple[int, int, int]], chars: list[str], shape: tuple[int, int]
+) -> list[str]:
+    """Format an ascii-image for terminal output.
+
+    :param colors: list of RGB colors (from get_ascii_image_data)
+    :param chars: list of characters (from get_ascii_image_data)
+    :param shape: shape of the ascii-image in characters (from get_ascii_image_data)
+    :return: ansi escaped list of strings, one per row.
+    """
+    colored = format_term(*zip(colors, chars, strict=True))
+    h, w = shape
+    return ["".join(it.islice(colored, w)) for _ in range(h)]
+
+
+def format_ascii_image_for_html(
+    colors: list[tuple[int, int, int]], chars: list[str], shape: tuple[int, int]
+) -> list[str]:
+    """Format an ascii-image for HTML output.
+
+    :param colors: list of RGB colors (from get_ascii_image_data)
+    :param chars: list of characters (from get_ascii_image_data)
+    :param shape: shape of the ascii-image in characters (from get_ascii_image_data)
+    :return: span-tagged list of strings, one per row.
+    """
+    colored = format_html(*zip(colors, chars, strict=True))
+    h, w = shape
+    return ["".join(it.islice(colored, w)) for _ in range(h)]

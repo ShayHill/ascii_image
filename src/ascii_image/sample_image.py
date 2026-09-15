@@ -5,13 +5,13 @@
 """
 
 from pathlib import Path
-
-import numpy as np
-from PIL import Image
-from numpy import typing as npt
 from typing import Annotated
 
-from ascii_image.reshape import CharVectors, pixels_to_char_vectors, CHAR_W, CHAR_H
+import numpy as np
+from numpy import typing as npt
+from PIL import Image
+
+from ascii_image.reshape import CHAR_H, CHAR_W, CharVectors, pixels_to_char_vectors
 
 
 def _infer_width_height(

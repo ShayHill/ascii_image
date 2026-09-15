@@ -68,9 +68,9 @@ def _normalize_char_vectors(char_vecs: CharVectors) -> CharVectors:
     set of characters.
     """
     maxs = np.max(char_vecs, axis=0)
-    maxs[np.where(maxs == 0)] = 255
+    maxs[np.where(maxs == 0)] = 255  # pyright: ignore[reportUnknownMemberType]
     scalars = 255.0 / maxs
-    return np.clip(char_vecs * scalars, 0, 255)
+    return np.clip(char_vecs * scalars, 0, 255)  # pyright: ignore[reportUnknownMemberType]
 
 
 def get_font_vectors(font: Path) -> CharVectors:
@@ -86,5 +86,3 @@ def get_font_vectors(font: Path) -> CharVectors:
     alphas = np.array(Image.open(cache))[:, :, 3]
     char_vecs = pixels_to_char_vectors(alphas)
     return _normalize_char_vectors(char_vecs)
-
-
