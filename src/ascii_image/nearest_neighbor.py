@@ -34,15 +34,15 @@ def find_nn_char_pnt(query_vector: CharVector, candidates: CharVectors) -> int:
     max_axis_deltas = np.max(abs(candidates - query_vector), axis=1)
 
     while candidates.shape[0]:
-        ruled_in = np.where(max_axis_deltas <= np.sqrt(min_sqd_dist))
+        ruled_in = np.where(max_axis_deltas <= np.sqrt(min_sqd_dist))  # pyright: ignore[reportUnknownMemberType]
         candidates = candidates[ruled_in]
         max_axis_deltas = max_axis_deltas[ruled_in]
         char_pts = char_pts[ruled_in]
 
         for i, candidate in enumerate(candidates):
-            sqd_dist = np.sum((candidate - query_vector) ** 2)
+            sqd_dist = np.sum((candidate - query_vector) ** 2)  # pyright: ignore[reportUnknownVariableType]
             if sqd_dist < min_sqd_dist:
-                min_sqd_dist = sqd_dist
+                min_sqd_dist = sqd_dist  # pyright: ignore[reportUnknownVariableType]
                 best = char_pts[i]
                 candidates = candidates[i + 1 :]
                 max_axis_deltas = max_axis_deltas[i + 1 :]

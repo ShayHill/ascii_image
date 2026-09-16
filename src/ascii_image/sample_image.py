@@ -14,7 +14,7 @@ from PIL import Image
 from ascii_image.reshape import CHAR_H, CHAR_W, CharVectors, pixels_to_char_vectors
 
 
-def _infer_width_height(
+def _infer_width_or_height(
     image_size: tuple[int, int], width_in_chars: int | None, height_in_chars: int | None
 ) -> tuple[int, int]:
     """Match width or height to image aspect ratio if one not given."""
@@ -42,7 +42,7 @@ def get_pixel_vectors(
     :return: array of superpixel vectors, (h, w, 3) array of colors
     """
     img = Image.open(path)
-    width, height = _infer_width_height(img.size, width, height)
+    width, height = _infer_width_or_height(img.size, width, height)
     for_alphas = img.resize(
         (width * CHAR_W, height * CHAR_H), resample=Image.Resampling.BILINEAR
     )
