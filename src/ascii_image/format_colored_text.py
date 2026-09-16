@@ -95,6 +95,8 @@ def format_term(*texts: RgbText | str) -> Iterator[str]:
     :param texts: (rgb, text) tuples and / or bare strings
     :return: Iterator of strings with ansi escape codes
     """
+    if not texts:
+        return iter([""])
     rgbs, txts = zip(*_expand_bare_str_args(*texts), strict=True)
     begs = (
         _ansi_open(b) if a != b and b is not None else ""
@@ -112,6 +114,8 @@ def format_html(*texts: RgbText | str) -> Iterator[str]:
     :param texts: (rgb, text) tuples and / or bare strings
     :return: Iterator of strings with span tags
     """
+    if not texts:
+        return iter([""])
     rgbs, txts = zip(*_expand_bare_str_args(*texts), strict=True)
     begs = (
         _span_open(b) if a != b and b is not None else ""
